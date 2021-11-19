@@ -1,0 +1,126 @@
+<div class="container">
+  <div class="jumbotron py-3">
+    <h1 class="display-4 text-center">Cadastro de Cursos</h1>
+  </div>
+  
+  <form novalidate autocomplete="off" #form="ngForm" (submit)="onSubmit(form)">
+    <input type="hidden" name="cursoId" [value]="service.formData.cursoId" />
+    <div class="form-row">
+      <div class="form-group col-md-4">
+        <label>Descrição do Curso</label>
+        <input
+          class="form-control form-control-lg"
+          placeholder="Nome do Curso"
+          name="descricao"
+          #descricao="ngModel"
+          [(ngModel)]="service.formData.descricao"
+          required
+          [class.invalid]="descricao.invalid && descricao.touched"
+        />
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group col-md-4">
+        <label>Data Inicio</label>
+        <input
+          class="form-control form-control-lg"
+          type="date"
+          name="dataInicio"
+          min="{{ data | date: 'yyyy-MM-dd' }}"
+          #dataInicio="ngModel"
+          [(ngModel)]="service.formData.dataInicio"
+          required
+          [class.invalid]="dataInicio.invalid && dataInicio.touched"
+        />
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group col-md-4">
+        <label>Data Termino</label>
+        <input
+          class="form-control form-control-lg"
+          type="date"
+          name="dataTermino"
+          min="{{ service.formData.dataInicio }}"
+          #dataTermino="ngModel"
+          [(ngModel)]="service.formData.dataTermino"
+          required
+          [class.invalid]="dataTermino.invalid && dataTermino.touched"
+        />
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group col-md-4">
+        <label>Quantidade de Alunos</label>
+        <input
+          class="form-control form-control-lg"
+          name="qtdAlunosTurma"
+          #qtdAlunosTurma="ngModel"
+          [(ngModel)]="service.formData.qtdAlunosTurma"
+          [class.invalid]="qtdAlunosTurma.invalid && qtdAlunosTurma.touched"
+        />
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group col-md-4">
+        <label>Categoria</label>
+        <select
+          [(ngModel)]="service.formData.categoriaId"
+          #categoriaId="ngModel"
+          name="categoriaId"
+          class="form-control"
+        >
+          <option
+            *ngFor="let categoria of listaCategoria"
+            value="{{ categoria.categoriaId }}"
+          >
+            {{ categoria.nome }}
+          </option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group col-md-2">
+      <button class="btn btn-dark btn-lg btn-block" type="submit">
+        Adicionar Curso
+      </button>
+    </div>
+  </form>
+
+
+  <div class="col-md-6">
+    <table class="table">
+      <thead class="thead-light">
+        <tr>
+          <th>LogID</th>
+          <th>Curso</th>
+          <th>Data Inicio</th>
+          <th>Data Término</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          *ngFor="
+            let cursos of service.list | filter: filter | filter: filterDate;
+            let i = index
+          "
+        >
+          <td (click)="populateForm(cursos)">{{ cursos.cursoId }}</td>
+          <td (click)="populateForm(cursos)">{{ cursos.descricao }}</td>
+          <td (click)="populateForm(cursos)">
+            {{ cursos.dataInicio | date: "dd-MM-yyyy" }}
+          </td>
+          <td (click)="populateForm(cursos)">
+            {{ cursos.dataTermino | date: "dd-MM-yyyy" }}
+          </td>
+          <td>
+            <i
+              class="far fa-trash-alt fa-lg text-danger"
+              (click)="onDelete(cursos.cursoId)"
+            ></i>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
